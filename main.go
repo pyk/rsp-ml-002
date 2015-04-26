@@ -24,7 +24,7 @@ func waitNotifications(l *pq.Listener) {
 			// TODO: run each function on go routine
 			c := cron.New()
 			c.AddFunc("@every 5s", func() {
-				fmt.Printf("cron: fetch %v\n", n.Extra)
+				log.Printf("[fetcherd]: fetch %v\n", n.Extra)
 			})
 			c.Start()
 			return
@@ -47,6 +47,8 @@ func main() {
 		log.Printf("Error opening database: %v\n", err)
 		os.Exit(0)
 	}
+	// TODO: first, start a cron job from source that available on
+	// sources table
 
 	reportProblem := func(ev pq.ListenerEventType, err error) {
 		if err != nil {
