@@ -1,0 +1,7 @@
+rsp-ml-002 is part of my research project on Machine Learning.
+
+codename    : fetcherd
+keyword     : data collector, long-running proccess
+objective   : listening on specific channel that defined in Postgresql database
+              then run a prediocally cron jobs that fetch RSS/Atom feeds.
+
