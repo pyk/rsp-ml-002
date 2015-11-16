@@ -24,8 +24,8 @@ type Entry struct {
 	Updated   time.Time `xml:"updated"`
 	Author    Author    `xml:"author"`
 	Content   string    `xml:"content"`
-	// Link      []Link    `xml:"link"`
-	// Summary   string    `xml:"summary"`
+	Link      []Link    `xml:"link"`
+	Summary   string    `xml:"summary"`
 }
 
 type Atom struct {
@@ -39,6 +39,19 @@ type Atom struct {
 	Entries  []Entry   `xml:"entry"`
 }
 
+type Item struct {
+	Title       string `xml:"title"`
+	Link        string `xml:"link"`
+	Description string `xml:"description"`
+}
+type RSS struct {
+	XMLName     xml.Name `xml:"rss"`
+	Title       string   `xml:"title"`
+	Link        []Link   `xml:"link"`
+	Description string   `xml:"description"`
+	Item        []Item   `xml:"item"`
+}
+
 func main() {
 	// RSS & Atom feeds example
 	// using docker related feeds for example
@@ -46,6 +59,7 @@ func main() {
 		// RSS
 		"http://blog.docker.com/feed/",
 		"https://serversforhackers.com/feed",
+		"http://dtrace.org/blogs/wesolows/feed/",
 
 		// Atom
 		"http://googlecloudplatform.blogspot.com/feeds/posts/default",
@@ -101,8 +115,18 @@ func main() {
 			// }
 		}
 
-		if s[0] == "application/rss+xml" {
+		if s[0] == "text/xml" {
 			fmt.Printf("%v type RSS\n", feed)
+			start := time.Now()
+			var rss RSS
+			dec := xml.NewDecoder(resp.Body)
+			err := dec.Decode(&rss)
+			if err != nil {
+				fmt.Printf("Error saat decode %v\n", err)
+				continue
+			}
+			fmt.Printf("Encode %v\n", time.Since(start))
+			fmt.Printf("%#v\n", rss)
 		}
 
 	}
